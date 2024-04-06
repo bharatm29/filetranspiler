@@ -1,4 +1,50 @@
+<!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Upload and Database Insertion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        p {
+            color: #333;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
 <body>
 <form action="dashboard.php" method="post">
     <input type="submit" value="Go to Dashboard"/>
@@ -15,17 +61,17 @@ $target_dir = "uploads/";
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 
 if (file_exists($target_file)) {
-    die("File already exists<br>");
+    die("<p>File already exists</p>");
 }
 
 if ($_FILES["fileToUpload"]["size"] > 1000000) {
-    die("File is too large<br>");
+    die("<p>File is too large</p>");
 }
 
 if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-    echo "File uploaded successfully<br>";
+    echo "<p>File uploaded successfully</p>";
 } else {
-    echo "Could not Upload the file to server.<br>";
+    echo "<p>Could not Upload the file to server.</p>";
 }
 
 // base name of file to use as the table name
@@ -48,7 +94,7 @@ if (($handle = fopen($target_file, "r")) !== FALSE) {
     if (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
         $data = array_map(function ($field) {
             // Replace field names like 'Number of Crashes' with 'Number_of_Crashes'
-            return preg_replace("/\s+/", "_", $field);
+            return preg_replace("/\s+/", "_", trim($field));
         }, $data);
 
         // FIXME: Handle long field names
@@ -65,10 +111,10 @@ if (($handle = fopen($target_file, "r")) !== FALSE) {
 
         try {
             if ($dbconn->query($createQuery) !== TRUE) {
-                die("Error creating table: " . $dbconn->error);
+                die("<p>Error creating table: " . $dbconn->error."</p>");
             }
         } catch (Exception $e) {
-            echo "At line: ".__LINE__." | [MySQL Error]: " . $e->getMessage();
+            echo "<p>At line: " . __LINE__ . " | [MySQL Error]: " . $e->getMessage()."</p>";
         }
     }
 
@@ -90,15 +136,15 @@ if (($handle = fopen($target_file, "r")) !== FALSE) {
 
         try {
             if ($dbconn->query($insertQuery) !== TRUE) {
-                die("Error inserting values into table: " . $dbconn->error);
+                die("<p>Error inserting values into table: " . $dbconn->error."</p>");
             }
         } catch (Exception $e) {
-            echo "At line: ".__LINE__." | [MySQL Error]: " . $e->getMessage();
+            echo "<p>At line: " . __LINE__ . " | [MySQL Error]: " . $e->getMessage()."</p>";
         }
     }
     fclose($handle);
 }
 
 if (!$dbconn->close()) {
-    die ("Error closing database: " . $dbconn->error);
+    die ("<p>Error closing database: " . $dbconn->error."</p>");
 }

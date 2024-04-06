@@ -3,12 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <title>File Transpiler</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        form {
+            background-color: #fff;
+            width: 400px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="file"] {
+            margin-bottom: 15px;
+            width: 100%;
+            padding: 10px 5px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-sizing: border-box; /* Ayo? */
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 12px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <form action="filehandling.php" method="post" enctype="multipart/form-data">
-        <label for="fileToUpload">Select file to upload:</label>
-        <input type="file" name="fileToUpload" id="fileToUpload" required><br>
-        <input type="submit" value="Upload CSV File" name="submit">
-    </form>
+<form action="filehandling.php" method="post" enctype="multipart/form-data">
+    <label for="fileToUpload">Select file to upload:</label>
+    <input type="file" name="fileToUpload" id="fileToUpload" required><br>
+    <input type="submit" value="Upload CSV File" name="submit">
+</form>
 </body>
 </html>
