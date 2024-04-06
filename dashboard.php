@@ -51,11 +51,37 @@ if (isset($_GET["table_name"]) && $_GET["table_name"] != "") {
             foreach ($row as $key => $_) {
                 echo "<th>" . $key . "</th>";
             }
+            echo "</tr>";
             $tuples[] = $row;
         }
 
+        $fieldSortForm = "<form action='dashboard.php?table_name=$table_name' method='post'><select name='sortBy'>";
+
+        foreach ($fields as $field) {
+            if (isset($_POST["sortBy"]) && $_POST["sortBy"] != "" && $_POST["sortBy"] == $field) {
+                $fieldSortForm .= "<option selected='selected' value='" . $field . "'>" . $field . "</option>";
+            } else {
+                $fieldSortForm .= "<option value='" . $field . "'>" . $field . "</option>";
+            }
+        }
+
+        $fieldSortForm .= <<<form
+                </select>
+                <input type="submit" value="Sort">
+        </form>
+        form;
+
+        echo $fieldSortForm;
+
         while ($row = $result->fetch_assoc()) {
             $tuples[] = $row;
+        }
+
+        if (isset($_POST["sortBy"]) && $_POST["sortBy"] != "") {
+            usort($tuples, function ($a, $b) {
+                $sortByField = $_POST["sortBy"];
+                return $a[$sortByField] <=> $b[$sortByField];
+            });
         }
 
         foreach ($tuples as $tuple) {
