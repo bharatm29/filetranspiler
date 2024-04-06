@@ -34,7 +34,12 @@ if ($dbconn->connect_error) {
 if (($handle = fopen($target_file, "r")) !== FALSE) {
     $fields = "";
     if (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-        $queryFields = implode(" VARCHAR(120), ", $data) . " VARCHAR(120)";
+        // Number of Crashes
+        $data = array_map(function ($field) {
+            return preg_replace("/\s+/", "_", $field);
+        }, $data);
+
+        $queryFields = implode(" VARCHAR(256), ", $data) . " VARCHAR(256)";
         $fields = implode(" , ", $data);
 
         $createQuery = <<<sql
@@ -43,7 +48,7 @@ if (($handle = fopen($target_file, "r")) !== FALSE) {
             );
         sql;
 
-        echo $createQuery."<br>";
+        echo $createQuery . "<br>";
 
         if ($dbconn->query($createQuery) !== TRUE) {
             die("Error creating table: " . $dbconn->error);
@@ -61,7 +66,7 @@ if (($handle = fopen($target_file, "r")) !== FALSE) {
         $insertQuery = <<<sql
         INSERT INTO $basename ($fields) VALUES ($values);
         sql;
-        echo $insertQuery."<br>";
+        echo $insertQuery . "<br>";
 
         if ($dbconn->query($insertQuery) !== TRUE) {
             die("Error inserting values into table: " . $dbconn->error);

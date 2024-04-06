@@ -16,7 +16,39 @@ $result = $dbconn->query("show tables;");
 echo "Tables: <ul>";
 
 while ($row = $result->fetch_assoc()) {
-    echo "<li>".$row["Tables_in_php"] . "</li>";
+    $table_name = $row["Tables_in_php"];
+    echo "<li><a href='dashboard.php?table_name=$table_name" . "'>$table_name" . "</a></li>";
 }
 
-echo "</ul>";
+echo "</ul > ";
+
+if (isset($_GET["table_name"]) && $_GET["table_name"] != "") {
+    $table_name = $_GET["table_name"];
+    $selectQuery = "SELECT * FROM $table_name;";
+    $result = $dbconn->query($selectQuery);
+
+    echo "<table border='1'>";
+    if ($result->num_rows > 0) {
+        if ($row = $result->fetch_assoc()) {
+            echo "<tr>";
+            foreach ($row as $key => $_) {
+                echo "<th>" . $key . "</th>";
+            }
+            echo "</tr><tr>";
+            foreach ($row as $_ => $value) {
+                echo "<td>" . $value . "</td>";
+            }
+            echo "</tr>";
+        }
+
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>";
+            foreach ($row as $_ => $value) {
+                echo "<td>" . $value . "</td>";
+            }
+            echo "</tr>";
+        }
+    }
+
+    echo "</table>";
+}
