@@ -4,6 +4,10 @@
 
 <?php
 
+if (isset($_POST["reset"])) { // If the reset button was clicked
+    unset($_POST);
+}
+
 // database connection
 $servername = "localhost";
 $username = "root";
@@ -31,6 +35,21 @@ while ($row = $result->fetch_assoc()) {
 
 echo "</ul>";
 
+/**
+ * @param $field
+ * @param string $fieldSortForm
+ * @return string
+ */
+function getFieldSortForm($field, string $fieldSortForm): string
+{
+    if (isset($_POST["sortBy"]) && $_POST["sortBy"] != "" && $_POST["sortBy"] == $field) {
+        $fieldSortForm .= "<option selected='selected' value='" . $field . "'>" . $field . "</option>";
+    } else {
+        $fieldSortForm .= "<option value='" . $field . "'>" . $field . "</option>";
+    }
+    return $fieldSortForm;
+}
+
 if (isset($_GET["table_name"]) && $_GET["table_name"] != "") {
     $table_name = $_GET["table_name"];
     $selectQuery = "SELECT * FROM $table_name;";
@@ -54,16 +73,19 @@ if (isset($_GET["table_name"]) && $_GET["table_name"] != "") {
         $fieldSortForm = "<form action='dashboard.php?table_name=$table_name' method='post'><select name='sortBy'>";
 
         foreach ($fields as $field) {
-            if (isset($_POST["sortBy"]) && $_POST["sortBy"] != "" && $_POST["sortBy"] == $field) {
-                $fieldSortForm .= "<option selected='selected' value='" . $field . "'>" . $field . "</option>";
+            if (isset($_POST["filterBy"])) {
+                if (in_array($field, $_POST["filterBy"])) {
+                    $fieldSortForm = getFieldSortForm($field, $fieldSortForm);
+                }
             } else {
-                $fieldSortForm .= "<option value='" . $field . "'>" . $field . "</option>";
+                $fieldSortForm = getFieldSortForm($field, $fieldSortForm);
             }
         }
 
         $fieldSortForm .= <<<form
                 </select>
                 <input type="submit" value="Sort">
+                <div>
         form;
 
         $fieldSortForm .= "<form action='dashboard.php?table_name=$table_name' method='post'><select name='filterBy[]' multiple size='2'>";
@@ -79,6 +101,8 @@ if (isset($_GET["table_name"]) && $_GET["table_name"] != "") {
         $fieldSortForm .= <<<form
                 </select>
                 <input type="submit" value="Filter">
+                </div>
+                <input type="submit" value="Reset" name="reset">
         </form>
         form;
 
@@ -99,10 +123,10 @@ if (isset($_GET["table_name"]) && $_GET["table_name"] != "") {
         foreach ($fields as $field) {
             if (isset($_POST["filterBy"])) {
                 if (in_array($field, $_POST["filterBy"])) {
-                    echo "<th>" . $field. "</th>";
+                    echo "<th>" . $field . "</th>";
                 }
             } else {
-                echo "<th>" . $field. "</th>";
+                echo "<th>" . $field . "</th>";
             }
         }
         echo "</tr>";
