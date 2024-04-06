@@ -65,8 +65,6 @@ if (isset($_GET["table_name"]) && $_GET["table_name"] != "") {
             }
             echo "</tr>";
         }
-
-        print_r($fields);
     }
 
     echo "</table>";

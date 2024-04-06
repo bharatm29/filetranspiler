@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>File Upload and Database Insertion</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+        * {
+            font-family: "Poppins", sans-serif;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f2f2f2;
@@ -61,7 +67,7 @@ $target_dir = "uploads/";
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 
 if (file_exists($target_file)) {
-    die("<p>File already exists</p>");
+    die("<p>File already uploaded.</p>");
 }
 
 if ($_FILES["fileToUpload"]["size"] > 1000000) {
