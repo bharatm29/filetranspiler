@@ -45,13 +45,9 @@ if (isset($_GET["table_name"]) && $_GET["table_name"] != "") {
     if ($result->num_rows > 0) {
         $tuples = array();
         $fields = array();
+
         if ($row = $result->fetch_assoc()) {
-            echo "<tr>";
             $fields = array_keys($row);
-            foreach ($row as $key => $_) {
-                echo "<th>" . $key . "</th>";
-            }
-            echo "</tr>";
             $tuples[] = $row;
         }
 
@@ -68,6 +64,21 @@ if (isset($_GET["table_name"]) && $_GET["table_name"] != "") {
         $fieldSortForm .= <<<form
                 </select>
                 <input type="submit" value="Sort">
+        form;
+
+        $fieldSortForm .= "<form action='dashboard.php?table_name=$table_name' method='post'><select name='filterBy[]' multiple size='2'>";
+
+        foreach ($fields as $field) {
+            if (isset($_POST["filterBy"]) && in_array($field, $_POST["filterBy"])) {
+                $fieldSortForm .= "<option selected='selected' value='" . $field . "'>" . $field . "</option>";
+            } else {
+                $fieldSortForm .= "<option value='" . $field . "'>" . $field . "</option>";
+            }
+        }
+
+        $fieldSortForm .= <<<form
+                </select>
+                <input type="submit" value="Filter">
         </form>
         form;
 
@@ -84,7 +95,24 @@ if (isset($_GET["table_name"]) && $_GET["table_name"] != "") {
             });
         }
 
+        echo "<tr>";
+        foreach ($fields as $field) {
+            if (isset($_POST["filterBy"])) {
+                if (in_array($field, $_POST["filterBy"])) {
+                    echo "<th>" . $field. "</th>";
+                }
+            } else {
+                echo "<th>" . $field. "</th>";
+            }
+        }
+        echo "</tr>";
+
         foreach ($tuples as $tuple) {
+            if (isset($_POST["filterBy"])) {
+                $tuple = array_filter($tuple, function ($key) {
+                    return in_array($key, $_POST["filterBy"]);
+                }, ARRAY_FILTER_USE_KEY);
+            }
             echo "<tr>";
             foreach ($tuple as $_ => $value) {
                 echo "<td>" . $value . "</td>";
