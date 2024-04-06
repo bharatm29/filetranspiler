@@ -11,7 +11,11 @@ if ($dbconn->connect_error) {
     die("Connection failed: " . $dbconn->connect_error);
 }
 
-$result = $dbconn->query("show tables;");
+try {
+    $result = $dbconn->query("show tables;");
+} catch (Exception $e) {
+    echo "At line: ".__LINE__." | [MySQL Error]: " . $e->getMessage();
+}
 
 echo "Tables: <ul>";
 
@@ -25,7 +29,12 @@ echo "</ul > ";
 if (isset($_GET["table_name"]) && $_GET["table_name"] != "") {
     $table_name = $_GET["table_name"];
     $selectQuery = "SELECT * FROM $table_name;";
-    $result = $dbconn->query($selectQuery);
+
+    try {
+        $result = $dbconn->query($selectQuery);
+    } catch (Exception $e) {
+        echo "At line: ".__LINE__." | [MySQL Error]: " . $e->getMessage();
+    }
 
     echo "<table border='1'>";
     if ($result->num_rows > 0) {
