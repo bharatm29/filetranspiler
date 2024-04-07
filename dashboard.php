@@ -1,6 +1,15 @@
-<style>
-    <?php include 'dashboard.css'; ?>
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <style>
+        <?php include 'dashboard.css'; ?>
+    </style>
+<body>
+<a id="go-back-link" href="http://localhost/filetranspiler/">&#8592 Go Back</a>
+</body>
+</html>
 
 <?php
 
@@ -70,7 +79,7 @@ if (isset($_GET["table_name"]) && $_GET["table_name"] != "") {
             $tuples[] = $row;
         }
 
-        $fieldSortForm = "<form action='dashboard.php?table_name=$table_name' method='post'><select name='sortBy'>";
+        $fieldSortForm = "<form action='dashboard.php?table_name=$table_name' method='post'><div id='form-container'><div id='sort-select-container'><select name='sortBy'>";
 
         foreach ($fields as $field) {
             if (isset($_POST["filterBy"])) {
@@ -85,7 +94,8 @@ if (isset($_GET["table_name"]) && $_GET["table_name"] != "") {
         $fieldSortForm .= <<<form
                 </select>
                 <input type="submit" value="Sort">
-                <div>
+                </div>
+                <div id="filter-select-container">
         form;
 
         $fieldSortForm .= "<form action='dashboard.php?table_name=$table_name' method='post'><select name='filterBy[]' multiple size='2'>";
@@ -103,6 +113,7 @@ if (isset($_GET["table_name"]) && $_GET["table_name"] != "") {
                 <input type="submit" value="Filter">
                 </div>
                 <input type="submit" value="Reset" name="reset">
+                </div>
         </form>
         form;
 

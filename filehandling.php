@@ -128,7 +128,8 @@ if (($handle = fopen($target_file, "r")) !== FALSE) {
         $values = "";
 
         for ($c = 0; $c < count($data); $c++) {
-            $values .= "'" . $data[$c] . "',";
+            $value = preg_replace("/'/", "", trim($data[$c]));
+            $values .= "'" . $value . "',";
         }
 
         $values = substr($values, 0, -1);

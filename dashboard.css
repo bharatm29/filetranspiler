@@ -21,6 +21,7 @@ a:hover {
 
 /* table css */
 table {
+    margin-block: 2rem;
     width: 100%;
     border-collapse: collapse;
 }
@@ -39,4 +40,23 @@ p {
     color: #007bff;
     font-weight: bold;
     margin-top: 10px;
+}
+
+#go-back-link {
+    color: #884f4f;
+}
+#go-back-link:hover {
+    color: #007bff;
+}
+
+#sort-select-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+#filter-select-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
 }
