@@ -17,17 +17,8 @@ if (isset($_POST["reset"])) { // If the reset button was clicked
     unset($_POST);
 }
 
-// database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "php";
-
-$dbconn = new mysqli($servername, $username, $password, $dbname);
-
-if ($dbconn->connect_error) {
-    die("Connection failed: " . $dbconn->connect_error);
-}
+include ("conn.php");
+global $dbconn;
 
 try {
     $result = $dbconn->query("show tables;");

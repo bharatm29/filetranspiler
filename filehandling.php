@@ -83,17 +83,8 @@ if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
 // base name of file to use as the table name
 $basename = pathinfo($target_file, PATHINFO_FILENAME);
 
-// database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "php";
-
-$dbconn = new mysqli($servername, $username, $password, $dbname);
-
-if ($dbconn->connect_error) {
-    die("Connection failed: " . $dbconn->connect_error);
-}
+include ("conn.php");
+global $dbconn;
 
 if (($handle = fopen($target_file, "r")) !== FALSE) {
     $fields = "";
